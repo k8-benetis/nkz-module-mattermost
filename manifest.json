@@ -1,0 +1,49 @@
+{
+    "id": "mattermost",
+    "name": "nkz-module-mattermost",
+    "display_name": "Communications (Mattermost)",
+    "version": "1.0.0",
+    "description": "Secure, sovereign ChatOps platform for team collaboration and automated alerts.",
+    "short_description": "Team Chat & Alerts",
+    "icon": "message-circle",
+    "author": {
+        "name": "Nekazari Team",
+        "email": "support@robotika.cloud"
+    },
+    "category": "communications",
+    "module_type": "ADDON_FREE",
+    "required_plan_type": "basic",
+    "pricing_tier": "FREE",
+    "route_path": "/communications",
+    "label": "Comunicaciones",
+    "required_roles": [
+        "User",
+        "TenantAdmin",
+        "PlatformAdmin"
+    ],
+    "navigation": {
+        "enabled": true,
+        "priority": 80,
+        "section": "main",
+        "icon": "message-circle"
+    },
+    "dependencies": {
+        "sdk_version": "^1.0.0",
+        "platform_version": "^2.0.0"
+    },
+    "build_config": {
+        "type": "remote",
+        "remote_entry_url": "/modules/mattermost/nkz-module.js",
+        "scope": "mattermost_module",
+        "exposed_module": "./App"
+    },
+    "metadata": {
+        "icon": "💬",
+        "color": "#1e3a8a",
+        "features": [
+            "Team Chat",
+            "N8N Integration",
+            "Sovereign Data"
+        ]
+    }
+}

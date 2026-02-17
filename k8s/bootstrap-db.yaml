@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mattermost-bootstrap-db
+  namespace: nekazari
+spec:
+  template:
+    spec:
+      containers:
+        - name: psql
+          image: postgres:14-alpine
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "Checking database connection..."
+              export PGPASSWORD=$POSTGRES_PASSWORD
+
+              echo "Creating user 'nkz_mattermost' if not exists..."
+              psql -h postgresql -U postgres -d postgres -c "DO \$\$ BEGIN IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'nkz_mattermost') THEN CREATE ROLE nkz_mattermost LOGIN PASSWORD '$MATTERMOST_DB_PASSWORD'; END IF; END \$\$;"
+
+              echo "Creating database 'mattermost' if not exists..."
+              psql -h postgresql -U postgres -d postgres -lqt | cut -d \| -f 1 | grep -qw mattermost || psql -h postgresql -U postgres -d postgres -c "CREATE DATABASE mattermost OWNER nkz_mattermost;"
+
+              echo "Granting privileges..."
+              psql -h postgresql -U postgres -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE mattermost TO nkz_mattermost;"
+
+              echo "Database bootstrap complete."
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-secret
+                  key: password
+            - name: MATTERMOST_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mattermost-secret
+                  key: db-password
+      restartPolicy: OnFailure

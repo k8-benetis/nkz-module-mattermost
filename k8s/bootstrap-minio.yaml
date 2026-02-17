@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mattermost-bootstrap-minio
+  namespace: nekazari
+spec:
+  template:
+    spec:
+      containers:
+        - name: minio-mc
+          image: minio/mc
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "Configuring MinIO client..."
+              mc alias set nkz http://minio-service:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD
+
+              echo "Creating bucket 'mattermost-data'..."
+              mc mb --ignore-existing nkz/mattermost-data
+
+              echo "Setting bucket policy to private (default)..."
+              # Mattermost handles its own pre-signed URLs, so private is fine.
+              # No public policy needed unless specifically required.
+
+              echo "MinIO bootstrap complete."
+          env:
+            - name: MINIO_ROOT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: nekazari-secrets
+                  key: minio-root-user
+            - name: MINIO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nekazari-secrets
+                  key: minio-root-password
+      restartPolicy: OnFailure
