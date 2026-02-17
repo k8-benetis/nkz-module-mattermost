@@ -1,5 +1,7 @@
 # NKZ Module: Mattermost (Communications)
 
+> Developed by **k8-Benetis** for [Robotika](https://robotika.cloud/).
+
 Provides a sovereign "ChatOps" interface integrated into the NKZ platform using [Mattermost Team Edition](https://mattermost.com/).
 
 ## Architecture

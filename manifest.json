@@ -7,8 +7,9 @@
     "short_description": "Team Chat & Alerts",
     "icon": "message-circle",
     "author": {
-        "name": "Nekazari Team",
-        "email": "support@robotika.cloud"
+        "name": "k8-Benetis",
+        "email": "support@robotika.cloud",
+        "url": "https://robotika.cloud"
     },
     "category": "communications",
     "module_type": "ADDON_FREE",
